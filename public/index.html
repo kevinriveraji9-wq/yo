@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COSTRUKER - Dashboard</title>
+  
+  <!-- PWA Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e1e2f">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css?v=5">
+  
+  <!-- Librerias para PDF y Graficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <!-- Vista Login -->
+  <main id="login-view" class="view active-view">
+    <div class="glass-container login-card">
+      <div class="logo-area">
+        <div class="brand-logo" style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+             <polyline points="2 17 12 22 22 17"></polyline>
+             <polyline points="2 12 12 17 22 12"></polyline>
+           </svg>
+           <h1 style="margin:0; letter-spacing: 2px;">COSTRUKER</h1>
+        </div>
+        <p>Gestión de Cuadrilla y Nómina</p>
+      </div>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="username">Usuario</label>
+          <input type="text" id="username" placeholder="Ingresa tu usuario" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-primary">Ingresar</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Navbar -->
+  <nav id="main-nav" class="hidden">
+    <div class="nav-brand" style="cursor:pointer; display: flex; align-items: center; gap: 8px;" onclick="goHome()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+        <span style="font-weight: 800; letter-spacing: 1px; color: var(--text-primary);">COSTRUKER</span>
+    </div>
+    <div class="nav-search">
+      <input type="text" id="global-search-input" placeholder="Buscar trabajador..." class="search-box">
+    </div>
+    <div class="nav-actions">
+      <button id="logout-btn" class="btn-outline btn-small">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <!-- Vista Dashboard (Proyectos) -->
+  <main id="dashboard-view" class="view hidden" style="position: relative; overflow: hidden;">
+    <!-- Watermark Logo de Fondo -->
+    <div class="dashboard-watermark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+        <polyline points="2 17 12 22 22 17"></polyline>
+        <polyline points="2 12 12 17 22 12"></polyline>
+      </svg>
+    </div>
+    <div class="header-action">
+      <h2>Tus Obras Activas</h2>
+      <button id="new-project-btn" class="btn-primary">+ Nueva Obra</button>
+    </div>
+    
+    <!-- Estadisticas Dashboard -->
+    <div id="dashboard-stats" class="glass-container table-responsive mb-4" style="margin-bottom: 2rem;">
+      <h3 style="margin-bottom: 1rem;">Estadísticas Generales</h3>
+      <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
+        <div style="flex:1; min-width:300px;">
+          <canvas id="statsChart" style="max-height: 250px;"></canvas>
+        </div>
+        <div style="flex:1; min-width:300px;" id="stats-text-container">
+          <!-- Text stats -->
+        </div>
+      </div>
+    </div>
+
+    <div id="projects-grid" class="grid-container">
+      <!-- Los proyectos se inyectarán aquí -->
+    </div>
+  </main>
+
+  <!-- Vista Buscador Global -->
+  <main id="search-view" class="view hidden">
+    <div class="header-action">
+      <h2>Resultados de Búsqueda</h2>
+      <button class="btn-ghost" onclick="goHome()">← Volver</button>
+    </div>
+    <div class="table-responsive glass-container">
+      <table id="search-table">
+        <thead>
+          <tr>
+            <th>Nombre y Detalles</th>
+            <th>Fechas de Días Trabajados</th>
+            <th>Saldo a Pagar</th>
+            <th>Ubicación (Obra)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Resultados integrados aqui -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Vista de Detalle de Proyecto -->
+  <main id="project-detail-view" class="view hidden">
+    <div class="breadcrump">
+      <button class="btn-ghost" id="back-to-dashboard">← Volver al Dashboard</button>
+      <h2 id="current-project-title">Cargando...</h2>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-target="tab-workers">Cuadrilla</button>
+      <button class="tab-btn" data-target="tab-attendance">Asistencia Rápida</button>
+      <button class="tab-btn" data-target="tab-payroll">Nómina</button>
+      <button class="tab-btn" data-target="tab-expenses">Gastos</button>
+    </div>
+
+    <!-- Pestaña Trabajadores -->
+    <div class="tab-content active" id="tab-workers">
+      <div class="header-action">
+        <h3>Equipo de Trabajo</h3>
+        <button id="new-worker-btn" class="btn-secondary">+ Añadir Trabajador</button>
+      </div>
+      <div class="table-responsive glass-container">
+        <table id="workers-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Cargo</th>
+              <th>Documento</th>
+              <th>Valor Día ($)</th>
+              <th>Acciones de Finanzas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Trabajadores inyectados aquí -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pestaña Asistencia Rapida -->
+    <div class="tab-content hidden" id="tab-attendance">
+      <div class="glass-container payroll-controls">
+        <h3>Pasar Lista de Asistencia</h3>
+        <div class="inline-form">
+          <div class="input-group">
+            <label>Fecha de Asistencia</label>
+            <input type="date" id="attendance-date" required>
+          </div>
+          <button type="button" class="btn-primary" onclick="saveMassiveAttendance()">Guardar Asistencia de Todos</button>
+        </div>
+      </div>
+      <div class="table-responsive glass-container mt-4">
+        <table id="attendance-table">
+          <thead>
+            <tr>
+              <th>Trabajador</th>
+              <th>Asistencia (Días)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Asistencia inyectada -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pestaña Nómina -->
+    <div class="tab-content hidden" id="tab-payroll">
+      <div class="glass-container payroll-controls">
+        <h3>Consultar y Pagar Nómina</h3>
+        <form id="payroll-form" class="inline-form">
+          <div class="input-group">
+            <label>Fecha Inicial</label>
+            <input type="date" id="start-date" required>
+          </div>
+          <div class="input-group">
+            <label>Fecha Final</label>
+            <input type="date" id="end-date" required>
+          </div>
+          <button type="submit" class="btn-primary">Calcular</button>
+        </form>
+      </div>
+
+      <div id="payroll-results" class="hidden">
+        <div class="summary-cards">
+          <div class="card glass-container">
+            <h4>Total Bruto</h4>
+            <p id="sum-gross">$0</p>
+          </div>
+          <div class="card glass-container">
+            <h4>Total Adelantos</h4>
+            <p id="sum-advances">$0</p>
+          </div>
+          <div class="card glass-container highlight-card">
+            <h4>Neto a Pagar</h4>
+            <p id="sum-net">$0</p>
+          </div>
+        </div>
+
+        <div class="header-action mt-4" style="margin-bottom: 1rem;">
+          <h3>Detalle a liquidar</h3>
+          <div style="display:flex; gap:10px;">
+            <button id="export-pdf-btn" class="btn-outline" style="font-size:1rem; padding: 0.5rem 1rem;">📄 Exportar PDF</button>
+            <button id="close-payroll-btn" class="btn-s-success" style="font-size:1rem; padding: 0.5rem 1rem;">✅ Confirmar y Cerrar Nómina</button>
+          </div>
+        </div>
+
+        <div class="table-responsive glass-container">
+          <table id="payroll-table">
+            <thead>
+              <tr>
+                <th>Trabajador</th>
+                <th>Días</th>
+                <th>Pago Bruto</th>
+                <th>Adelantos</th>
+                <th>A Pagar (Neto)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data nómina -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña Gastos -->
+    <div class="tab-content hidden" id="tab-expenses">
+      <div class="header-action">
+        <h3>Gastos de Obra (Materiales, Transportes, etc.)</h3>
+        <button id="new-expense-btn" class="btn-secondary" onclick="openExpenseModal()">+ Nuevo Gasto</button>
+      </div>
+      
+      <div class="glass-container mt-4 mb-4">
+        <h4 style="font-size: 1.2rem; color: var(--text-primary);">Total Gastado: <span id="total-expenses-label" class="negative">$0</span></h4>
+      </div>
+
+      <div class="table-responsive glass-container">
+        <table id="expenses-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Descripción</th>
+              <th>Monto ($)</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Gastos inyectados aquí -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals (Modales) -->
+
+  <!-- Modal Nuevo Proyecto -->
+  <div id="project-modal" class="modal hidden">
+    <div class="modal-content glass-container">
+      <h3>Crear Nueva Obra</h3>
+      <form id="project-form">
+        <div class="input-group">
+          <label>Nombre del proyecto</label>
+          <input type="text" id="project-name" required placeholder="Ej: Edificio Central">
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" onclick="closeModal('project-modal')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Nuevo Trabajador -->
+  <div id="worker-modal" class="modal hidden">
+    <div class="modal-content glass-container">
+      <h3>Datos del Trabajador</h3>
+      <form id="worker-form">
+        <input type="hidden" id="worker-id">
+        <div class="input-group">
+          <label>Nombre</label>
+          <input type="text" id="worker-name" required>
+        </div>
+        <div class="input-group">
+          <label>Cargo / Rol</label>
+          <select id="worker-role" class="styled-select" required>
+            <option value="Ayudante">Ayudante</option>
+            <option value="Oficial">Oficial</option>
+            <option value="Maestro">Maestro de Obra</option>
+            <option value="Contratista">Contratista</option>
+            <option value="Residente">Residente</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Documento</label>
+          <input type="text" id="worker-doc">
+        </div>
+        <div class="input-group">
+          <label>Valor por Día ($)</label>
+          <input type="number" id="worker-rate" min="0" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" onclick="closeModal('worker-modal')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Acciones Rápidas (Días / Adelantos) -->
+  <div id="action-modal" class="modal hidden">
+    <div class="modal-content glass-container">
+      <h3 id="action-modal-title">Acción</h3>
+      <h4 id="action-worker-name" class="subtitle"></h4>
+      <form id="action-form">
+        <input type="hidden" id="action-worker-id">
+        <input type="hidden" id="action-type"> 
+        
+        <div class="input-group">
+          <label>Fecha</label>
+          <input type="date" id="action-date" required>
+        </div>
+        <div class="input-group" id="action-value-group">
+          <label id="action-value-label">Valor</label>
+          <input type="number" id="action-value" step="0.5" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" onclick="closeModal('action-modal')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar Registro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal HISTORIAL INMORTAL -->
+  <div id="history-modal" class="modal hidden">
+    <div class="modal-content glass-container" style="max-width: 600px; max-height:80vh; overflow-y:auto;">
+      <h3>Historial Permanente</h3>
+      <h4 id="history-worker-name" class="subtitle"></h4>
+      
+      <div style="margin-bottom: 2rem;">
+        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Días Trabajados</h4>
+        <ul id="history-days-list" style="list-style:none; padding:10px 0; margin:0;"></ul>
+      </div>
+
+      <div>
+        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Adelantos Recibidos</h4>
+        <ul id="history-advances-list" style="list-style:none; padding:10px 0; margin:0;"></ul>
+      </div>
+
+      <div class="modal-actions" style="margin-top:2rem;">
+        <button type="button" class="btn-primary" onclick="closeModal('history-modal')">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Nuevo Gasto -->
+  <div id="expense-modal" class="modal hidden">
+    <div class="modal-content glass-container">
+      <h3>Registrar Gasto</h3>
+      <form id="expense-form">
+        <div class="input-group">
+          <label>Fecha</label>
+          <input type="date" id="expense-date" required>
+        </div>
+        <div class="input-group">
+          <label>Descripción / Concepto</label>
+          <input type="text" id="expense-desc" required placeholder="Ej: Cemento 5 bultos">
+        </div>
+        <div class="input-group">
+          <label>Monto Total ($)</label>
+          <input type="number" id="expense-amount" min="0" required>
+        </div>
+        <div class="modal-actions">
+           <button type="button" class="btn-ghost" onclick="closeModal('expense-modal')">Cancelar</button>
+           <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Dialog System (Reemplaza alert/prompt/confirm) -->
+  <div id="custom-dialog" class="modal hidden">
+    <div class="modal-content glass-container" style="max-width: 400px; text-align: center;">
+      <h3 id="dialog-title" style="color: var(--primary-color);">Atención</h3>
+      <p id="dialog-message" style="margin-bottom: 2rem; color: var(--text-primary);"></p>
+      
+      <div id="dialog-input-container" class="input-group hidden" style="text-align: left;">
+        <input type="text" id="dialog-input" style="font-family: var(--font-body);" placeholder="Escribe aquí...">
+      </div>
+      
+      <div class="modal-actions" style="justify-content: center; gap: 1rem;">
+        <button type="button" id="dialog-cancel-btn" class="btn-outline hidden">Cancelar</button>
+        <button type="button" id="dialog-confirm-btn" class="btn-primary">Aceptar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=4"></script>
+</body>
+</html>
