@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COSTRUKER - Dashboard</title>
-  
+
   <!-- PWA Meta -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1e1e2f">
@@ -13,9 +13,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="app.css?v=5">
-  
+
   <!-- Librerias para PDF y Graficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -32,12 +34,13 @@
     <div class="glass-container login-card">
       <div class="logo-area">
         <div class="brand-logo" style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-             <polyline points="2 17 12 22 22 17"></polyline>
-             <polyline points="2 12 12 17 22 12"></polyline>
-           </svg>
-           <h1 style="margin:0; letter-spacing: 2px;">COSTRUKER</h1>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          <h1 style="margin:0; letter-spacing: 2px;">COSTRUKER</h1>
         </div>
         <p>Gestión de Cuadrilla y Nómina</p>
       </div>
@@ -58,12 +61,13 @@
   <!-- Navbar -->
   <nav id="main-nav" class="hidden">
     <div class="nav-brand" style="cursor:pointer; display: flex; align-items: center; gap: 8px;" onclick="goHome()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
-        <span style="font-weight: 800; letter-spacing: 1px; color: var(--text-primary);">COSTRUKER</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+        <polyline points="2 17 12 22 22 17"></polyline>
+        <polyline points="2 12 12 17 22 12"></polyline>
+      </svg>
+      <span style="font-weight: 800; letter-spacing: 1px; color: var(--text-primary);">COSTRUKER</span>
     </div>
     <div class="nav-search">
       <input type="text" id="global-search-input" placeholder="Buscar trabajador..." class="search-box">
@@ -77,7 +81,8 @@
   <main id="dashboard-view" class="view hidden" style="position: relative; overflow: hidden;">
     <!-- Watermark Logo de Fondo -->
     <div class="dashboard-watermark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round"
+        stroke-linejoin="round">
         <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
         <polyline points="2 17 12 22 22 17"></polyline>
         <polyline points="2 12 12 17 22 12"></polyline>
@@ -87,7 +92,7 @@
       <h2>Tus Obras Activas</h2>
       <button id="new-project-btn" class="btn-primary">+ Nueva Obra</button>
     </div>
-    
+
     <!-- Estadisticas Dashboard -->
     <div id="dashboard-stats" class="glass-container table-responsive mb-4" style="margin-bottom: 2rem;">
       <h3 style="margin-bottom: 1rem;">Estadísticas Generales</h3>
@@ -176,7 +181,8 @@
             <label>Fecha de Asistencia</label>
             <input type="date" id="attendance-date" required>
           </div>
-          <button type="button" class="btn-primary" onclick="saveMassiveAttendance()">Guardar Asistencia de Todos</button>
+          <button type="button" class="btn-primary" onclick="saveMassiveAttendance()">Guardar Asistencia de
+            Todos</button>
         </div>
       </div>
       <div class="table-responsive glass-container mt-4">
@@ -230,8 +236,10 @@
         <div class="header-action mt-4" style="margin-bottom: 1rem;">
           <h3>Detalle a liquidar</h3>
           <div style="display:flex; gap:10px;">
-            <button id="export-pdf-btn" class="btn-outline" style="font-size:1rem; padding: 0.5rem 1rem;">📄 Exportar PDF</button>
-            <button id="close-payroll-btn" class="btn-s-success" style="font-size:1rem; padding: 0.5rem 1rem;">✅ Confirmar y Cerrar Nómina</button>
+            <button id="export-pdf-btn" class="btn-outline" style="font-size:1rem; padding: 0.5rem 1rem;">📄 Exportar
+              PDF</button>
+            <button id="close-payroll-btn" class="btn-s-success" style="font-size:1rem; padding: 0.5rem 1rem;">✅
+              Confirmar y Cerrar Nómina</button>
           </div>
         </div>
 
@@ -260,9 +268,10 @@
         <h3>Gastos de Obra (Materiales, Transportes, etc.)</h3>
         <button id="new-expense-btn" class="btn-secondary" onclick="openExpenseModal()">+ Nuevo Gasto</button>
       </div>
-      
+
       <div class="glass-container mt-4 mb-4">
-        <h4 style="font-size: 1.2rem; color: var(--text-primary);">Total Gastado: <span id="total-expenses-label" class="negative">$0</span></h4>
+        <h4 style="font-size: 1.2rem; color: var(--text-primary);">Total Gastado: <span id="total-expenses-label"
+            class="negative">$0</span></h4>
       </div>
 
       <div class="table-responsive glass-container">
@@ -345,8 +354,8 @@
       <h4 id="action-worker-name" class="subtitle"></h4>
       <form id="action-form">
         <input type="hidden" id="action-worker-id">
-        <input type="hidden" id="action-type"> 
-        
+        <input type="hidden" id="action-type">
+
         <div class="input-group">
           <label>Fecha</label>
           <input type="date" id="action-date" required>
@@ -368,14 +377,16 @@
     <div class="modal-content glass-container" style="max-width: 600px; max-height:80vh; overflow-y:auto;">
       <h3>Historial Permanente</h3>
       <h4 id="history-worker-name" class="subtitle"></h4>
-      
+
       <div style="margin-bottom: 2rem;">
-        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Días Trabajados</h4>
+        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Días
+          Trabajados</h4>
         <ul id="history-days-list" style="list-style:none; padding:10px 0; margin:0;"></ul>
       </div>
 
       <div>
-        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Adelantos Recibidos</h4>
+        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">
+          Adelantos Recibidos</h4>
         <ul id="history-advances-list" style="list-style:none; padding:10px 0; margin:0;"></ul>
       </div>
 
@@ -403,8 +414,8 @@
           <input type="number" id="expense-amount" min="0" required>
         </div>
         <div class="modal-actions">
-           <button type="button" class="btn-ghost" onclick="closeModal('expense-modal')">Cancelar</button>
-           <button type="submit" class="btn-primary">Guardar</button>
+          <button type="button" class="btn-ghost" onclick="closeModal('expense-modal')">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
         </div>
       </form>
     </div>
@@ -415,11 +426,11 @@
     <div class="modal-content glass-container" style="max-width: 400px; text-align: center;">
       <h3 id="dialog-title" style="color: var(--primary-color);">Atención</h3>
       <p id="dialog-message" style="margin-bottom: 2rem; color: var(--text-primary);"></p>
-      
+
       <div id="dialog-input-container" class="input-group hidden" style="text-align: left;">
         <input type="text" id="dialog-input" style="font-family: var(--font-body);" placeholder="Escribe aquí...">
       </div>
-      
+
       <div class="modal-actions" style="justify-content: center; gap: 1rem;">
         <button type="button" id="dialog-cancel-btn" class="btn-outline hidden">Cancelar</button>
         <button type="button" id="dialog-confirm-btn" class="btn-primary">Aceptar</button>
@@ -429,4 +440,5 @@
 
   <script src="app.js?v=4"></script>
 </body>
+
 </html>
