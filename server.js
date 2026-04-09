@@ -646,22 +646,26 @@ function ensureAdmin() {
       console.error('Error revisando admin:', err);
       return;
     }
-    if (row) return;
+    if (!row) {
+      const password = 'Admin123!';
+      const hash = await bcrypt.hash(password, 10);
+      db.run('INSERT INTO users (username, password_hash) VALUES (?, ?)', ['admin', hash]);
+    }
+  });
 
-    const password = 'Admin123!';
-    const hash = await bcrypt.hash(password, 10);
+  // Asegurar los usuarios específicos solicitados
+  const defaultUsers = [
+    { u: 'Elver', p: 'Elver80.' },
+    { u: 'Kevinriv', p: '687524' }
+  ];
 
-    db.run(
-      'INSERT INTO users (username, password_hash) VALUES (?, ?)',
-      ['admin', hash],
-      function (err2) {
-        if (err2) {
-          console.error('Error creando admin:', err2);
-        } else {
-          console.log(`Admin creado: user=admin, pass=${password}`);
-        }
+  defaultUsers.forEach(user => {
+    db.get('SELECT id FROM users WHERE username = ?', [user.u], async (err, row) => {
+      if (!err && !row) {
+        const hash = await bcrypt.hash(user.p, 10);
+        db.run('INSERT INTO users (username, password_hash) VALUES (?, ?)', [user.u, hash]);
       }
-    );
+    });
   });
 }
 
