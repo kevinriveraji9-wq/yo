@@ -91,8 +91,14 @@ function require_auth() {
 // =======================
 // ROUTER
 // =======================
-$ruta = isset($_GET['ruta']) ? '/' . trim($_GET['ruta'], '/') : '';
+$rutaRaw = isset($_GET['ruta']) ? $_GET['ruta'] : '';
+$parsed = parse_url($rutaRaw);
+$ruta = '/' . trim($parsed['path'] ?? '', '/');
 if ($ruta === '/') $ruta = '';
+if (isset($parsed['query'])) {
+    parse_str($parsed['query'], $query_params);
+    $_GET = array_merge($_GET, $query_params);
+}
 $method = $_SERVER['REQUEST_METHOD'];
 $body = json_decode(file_get_contents('php://input'), true) ?: [];
 $segments = explode('/', trim($ruta, '/'));
