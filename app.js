@@ -159,7 +159,9 @@ function showView(viewId) {
   document.querySelectorAll('.view').forEach(v => {
     if (v.id !== viewId) {
       v.classList.remove('active-view');
-      setTimeout(() => v.classList.add('hidden'), 400); 
+      setTimeout(() => {
+        if (!v.classList.contains('active-view')) v.classList.add('hidden');
+      }, 400); 
     }
   });
   
@@ -184,7 +186,10 @@ function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
 async function apiFetch(endpoint, method = 'GET', body = null) {
   const headers = { 'Content-Type': 'application/json' };
-  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
+    headers['X-Auth-Token'] = authToken;
+  }
 
   const options = { method, headers };
   if (body) options.body = JSON.stringify(body);

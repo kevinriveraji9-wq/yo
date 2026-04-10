@@ -78,6 +78,9 @@ function require_auth() {
     
     $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
     $token = str_replace('Bearer ', '', trim($authHeader));
+    if (empty($token) && isset($headers['X-Auth-Token'])) {
+        $token = trim($headers['X-Auth-Token']);
+    }
     if (!$token) json_resp(['error' => 'Token requerido'], 401);
     
     $user = verify_jwt($token);
