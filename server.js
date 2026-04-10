@@ -14,10 +14,16 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+const allowedFrontend = ['/index.html', '/app.js', '/app.css', '/fix-dialogs.js', '/manifest.json', '/sw.js'];
+app.use((req, res, next) => {
+  if (allowedFrontend.includes(req.path)) {
+    return res.sendFile(path.join(__dirname, req.path));
+  }
+  next();
+});
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // =============== AUTH ===============
