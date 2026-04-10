@@ -76,10 +76,12 @@ function require_auth() {
         }
     }
     
-    $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+    $headers = array_change_key_case($headers, CASE_LOWER);
+
+    $authHeader = isset($headers['authorization']) ? $headers['authorization'] : '';
     $token = str_replace('Bearer ', '', trim($authHeader));
-    if (empty($token) && isset($headers['X-Auth-Token'])) {
-        $token = trim($headers['X-Auth-Token']);
+    if (empty($token) && isset($headers['x-auth-token'])) {
+        $token = trim($headers['x-auth-token']);
     }
     if (!$token) json_resp(['error' => 'Token requerido'], 401);
     

@@ -75,7 +75,13 @@ const customPrompt = (message, defaultValue = '', title = 'Ingresar Dato') => sh
 document.addEventListener('DOMContentLoaded', () => {
   if (authToken) {
     showView('dashboard-view');
-    loadProjects();
+    loadProjects().then(() => {
+      const savedProjId = localStorage.getItem('currentProjectId');
+      const savedProjName = localStorage.getItem('currentProjectName');
+      if (savedProjId && savedProjName) {
+        goToProject(savedProjId, savedProjName);
+      }
+    });
     loadDashboardStats();
   } else {
     showView('login-view');
@@ -149,6 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function goHome() {
   currentProject = null;
+  localStorage.removeItem('currentProjectId');
+  localStorage.removeItem('currentProjectName');
   document.getElementById('global-search-input').value = '';
   showView('dashboard-view');
   loadProjects();
@@ -240,6 +248,8 @@ async function handleLogin(e) {
 function logout() {
   authToken = null;
   localStorage.removeItem('token');
+  localStorage.removeItem('currentProjectId');
+  localStorage.removeItem('currentProjectName');
   showView('login-view');
 }
 
@@ -299,6 +309,8 @@ async function handleCreateProject(e) {
 
 function goToProject(id, name) {
   currentProject = { id, name };
+  localStorage.setItem('currentProjectId', id);
+  localStorage.setItem('currentProjectName', name);
   document.getElementById('current-project-title').textContent = name;
   showView('project-detail-view');
   
