@@ -1,5 +1,5 @@
 // Configuración y Estado Global
-const API_URL = '/api';
+const API_URL = 'api.php?ruta=';
 let authToken = localStorage.getItem('token') || null;
 let currentProject = null;
 let currentWorkers = [];
