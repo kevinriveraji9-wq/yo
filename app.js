@@ -193,7 +193,11 @@ function openModal(id) { document.getElementById(id).classList.remove('hidden');
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
 async function apiFetch(endpoint, method = 'GET', body = null) {
-  const headers = { 'Content-Type': 'application/json' };
+  const headers = {};
+  if (body) {
+    headers['Content-Type'] = 'application/json';
+  }
+  
   if (authToken) {
     headers['Authorization'] = `Bearer ${authToken}`;
     headers['X-Auth-Token'] = authToken;
