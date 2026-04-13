@@ -386,9 +386,15 @@
       <h3>Historial Permanente</h3>
       <h4 id="history-worker-name" class="subtitle"></h4>
 
+      <div class="input-group" style="margin-bottom: 1.5rem;">
+        <label>Ver Quincena Específica:</label>
+        <select id="history-period-filter" class="styled-select">
+          <option value="all">Todas las quincenas</option>
+        </select>
+      </div>
+
       <div style="margin-bottom: 2rem;">
-        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Días
-          Trabajados</h4>
+        <h4 style="color:var(--text-secondary); border-bottom:1px solid var(--surface-border); padding-bottom:5px;">Días Trabajados</h4>
         <ul id="history-days-list" style="list-style:none; padding:10px 0; margin:0;"></ul>
       </div>
 
