@@ -437,6 +437,18 @@ async function deleteWorker(id) {
   } catch(e) { customAlert(e.message); }
 }
 
+// Helper para agrupar fechas por quincena
+function getQuincenaStr(dateStr) {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const [y, m, d] = parts;
+  const day = parseInt(d, 10);
+  const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  const monthName = months[parseInt(m, 10)-1] || m;
+  const quincena = day <= 15 ? '1ra Quincena' : '2da Quincena';
+  return `${quincena} de ${monthName} ${y}`;
+}
+
 // Historial Inmortal
 async function openHistoryModal(workerId, workerName) {
   document.getElementById('history-worker-name').textContent = workerName;
@@ -448,19 +460,47 @@ async function openHistoryModal(workerId, workerName) {
     const days = await apiFetch(`/workers/${workerId}/work_entries`);
     const advances = await apiFetch(`/workers/${workerId}/advances`);
 
+    // Agrupar días
+    const groupedDays = {};
+    days.forEach(d => {
+      const g = getQuincenaStr(d.date);
+      if (!groupedDays[g]) groupedDays[g] = [];
+      groupedDays[g].push(d);
+    });
+
     const ulDays = document.getElementById('history-days-list');
     ulDays.innerHTML = '';
-    if(days.length === 0) ulDays.innerHTML = '<li><small>No hay dias registrados.</small></li>';
-    days.forEach(d => {
-      ulDays.innerHTML += `<li class="history-item"><span>📅 ${d.date}</span> <span>+ ${d.days_worked} días <button onclick="deleteSingleRecord('work', ${d.id})" class="btn-s-danger btn-small" style="padding:2px 5px; margin-left:10px;">🗑️</button></span></li>`;
+    if(days.length === 0) {
+      ulDays.innerHTML = '<li><small>No hay dias registrados.</small></li>';
+    } else {
+      for (const [group, items] of Object.entries(groupedDays)) {
+        ulDays.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 5px 10px; margin-top: 10px; border-radius: 5px; font-weight: bold; color: var(--primary-color);">${group}</div>`;
+        items.forEach(d => {
+          ulDays.innerHTML += `<li class="history-item" style="padding-left: 10px;"><span>📅 ${d.date}</span> <span>+ ${d.days_worked} días <button onclick="deleteSingleRecord('work', ${d.id})" class="btn-s-danger btn-small" style="padding:2px 5px; margin-left:10px;">🗑️</button></span></li>`;
+        });
+      }
+    }
+
+    // Agrupar adelantos
+    const groupedAdvances = {};
+    advances.forEach(a => {
+      const g = getQuincenaStr(a.date);
+      if (!groupedAdvances[g]) groupedAdvances[g] = [];
+      groupedAdvances[g].push(a);
     });
 
     const ulAdv = document.getElementById('history-advances-list');
     ulAdv.innerHTML = '';
-    if(advances.length === 0) ulAdv.innerHTML = '<li><small>No hay adelantos registrados.</small></li>';
-    advances.forEach(a => {
-      ulAdv.innerHTML += `<li class="history-item"><span>📅 ${a.date}</span> <span class="negative">- ${formatMoney(a.amount)} <button onclick="deleteSingleRecord('adv', ${a.id})" class="btn-s-danger btn-small" style="padding:2px 5px; margin-left:10px;">🗑️</button></span></li>`;
-    });
+    if(advances.length === 0) {
+      ulAdv.innerHTML = '<li><small>No hay adelantos registrados.</small></li>';
+    } else {
+      for (const [group, items] of Object.entries(groupedAdvances)) {
+        ulAdv.innerHTML += `<div style="background: rgba(255,255,255,0.05); padding: 5px 10px; margin-top: 10px; border-radius: 5px; font-weight: bold; color: var(--primary-color);">${group}</div>`;
+        items.forEach(a => {
+          ulAdv.innerHTML += `<li class="history-item" style="padding-left: 10px;"><span>📅 ${a.date}</span> <span class="negative">- ${formatMoney(a.amount)} <button onclick="deleteSingleRecord('adv', ${a.id})" class="btn-s-danger btn-small" style="padding:2px 5px; margin-left:10px;">🗑️</button></span></li>`;
+        });
+      }
+    }
   } catch(e) {
     customAlert("Error cargando historial");
   }
