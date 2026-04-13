@@ -761,9 +761,9 @@ async function loadDashboardStats() {
     const dataExpenses = stats ? stats.map(s => s.total_expenses) : [];
     
     textContainer.innerHTML = `
-      <h4 style="color:var(--text-secondary); text-transform:uppercase; font-size:0.8rem; font-weight:700; font-family:var(--font-mono);">Gasto Histórico Total</h4>
+      <h4 style="color:var(--text-secondary); text-transform:uppercase; font-size:0.8rem; font-weight:700; font-family:var(--font-mono);">Saldo Pendiente Actual</h4>
       <h2 style="font-size:3rem; margin:10px 0; color:var(--primary-color); font-weight:700; font-family:var(--font-mono); text-shadow:0 0 15px var(--primary-glow);">${formatMoney(totalGlobalCheck)}</h2>
-      <p style="color:var(--text-secondary); font-size:0.9rem;">Suma de todas las nóminas liquidadas y gastos de inventario en todas las obras activas.</p>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">Suma de todas las nóminas pendientes y gastos de inventario en todas las obras activas.</p>
     `;
     
     const ctx = document.getElementById('statsChart').getContext('2d');

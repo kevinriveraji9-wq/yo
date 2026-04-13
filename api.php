@@ -338,7 +338,7 @@ try {
         require_auth();
         $sql = "SELECT p.id, p.name,
               (SELECT COALESCE(SUM(amount), 0) FROM expenses WHERE project_id = p.id) AS total_expenses,
-              (SELECT COALESCE(SUM(we.days_worked * w.rate_per_day), 0) FROM work_entries we JOIN workers w ON we.worker_id = w.id WHERE we.project_id = p.id) AS total_payroll
+              (SELECT COALESCE(SUM(we.days_worked * w.rate_per_day), 0) FROM work_entries we JOIN workers w ON we.worker_id = w.id WHERE we.project_id = p.id AND we.is_paid = 0) AS total_payroll
             FROM projects p";
         $stmt = $pdo->query($sql);
         $rows = $stmt->fetchAll();
