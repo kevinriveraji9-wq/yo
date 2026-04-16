@@ -69,8 +69,12 @@ const customPrompt = (message, defaultValue = '', title = 'Ingresar Dato') => sh
 
 // ========================
 // RECURSOS DE UTILIDAD
-
 // ========================
+function getLocalISODate() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().split('T')[0];
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   if (authToken) {
@@ -138,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('expense-form').addEventListener('submit', handleExpenseSubmit);
 
   // Restricción: No permitir seleccionar días que no han llegado (fechas futuras)
-  const todayMax = new Date().toISOString().split('T')[0];
+  const todayMax = getLocalISODate();
   ['start-date', 'end-date', 'attendance-date', 'expense-date', 'action-date'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -322,7 +326,7 @@ function goToProject(id, name) {
   document.getElementById('payroll-results').classList.add('hidden');
   
   // Set default dates to today
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = getLocalISODate();
   document.getElementById('attendance-date').value = todayStr;
   document.getElementById('start-date').value = todayStr;
   document.getElementById('end-date').value = todayStr;
@@ -371,9 +375,9 @@ async function loadWorkers() {
         <td>${w.document || 'N/A'}</td>
         <td>${formatMoney(w.rate_per_day)}/día</td>
         <td class="actions-cell">
-          <button class="btn-s-success btn-small" onclick="openActionModal(${w.id}, '${w.name}', 'days')">+Días</button>
-          <button class="btn-s-warning btn-small" onclick="openActionModal(${w.id}, '${w.name}', 'advance')">+Adelanto</button>
-          <button class="btn-outline btn-small" onclick="openHistoryModal(${w.id}, '${w.name}')">Ver Historial</button>
+          <button class="btn-s-success btn-small" onclick="openActionModal(${w.id}, '${w.name.replace(/'/g, "\\'")}', 'days')">+Días</button>
+          <button class="btn-s-warning btn-small" onclick="openActionModal(${w.id}, '${w.name.replace(/'/g, "\\'")}', 'advance')">+Adelanto</button>
+          <button class="btn-outline btn-small" onclick="openHistoryModal(${w.id}, '${w.name.replace(/'/g, "\\'")}')">Ver Historial</button>
           <button class="btn-s-warning btn-small" onclick="editWorker(${w.id}, '${w.name.replace(/'/g, "\\'")}', '${w.document||''}', ${w.rate_per_day}, '${w.role||'Ayudante'}')">✏️ Editar</button>
           <button class="btn-s-danger btn-small" onclick="deleteWorker(${w.id})">🗑️ Borrar</button>
         </td>
@@ -589,7 +593,7 @@ function openActionModal(workerId, workerName, type) {
   document.getElementById('action-type').value = type;
   document.getElementById('action-worker-name').textContent = workerName;
   
-  document.getElementById('action-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('action-date').value = getLocalISODate();
   document.getElementById('action-value').value = '';
 
   if (type === 'days') {
@@ -790,7 +794,7 @@ async function loadExpenses() {
 
 function openExpenseModal() {
   document.getElementById('expense-form').reset();
-  document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('expense-date').value = getLocalISODate();
   openModal('expense-modal');
 }
 
