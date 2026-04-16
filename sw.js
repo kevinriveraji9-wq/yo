@@ -1,4 +1,4 @@
-const CACHE_NAME = 'costruker-cache-v2';
+const CACHE_NAME = 'costruker-cache-v3';
 const urlsToCache = [
   '/',
   '/index.html',
